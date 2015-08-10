@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import <FacebookSDK.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 @implementation AppDelegate
 
@@ -50,11 +50,12 @@
          annotation:(id)annotation {
     
     // Call FBAppCall's handleOpenURL:sourceApplication to handle Facebook app responses
-    BOOL wasHandled = [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
+    //BOOL wasHandled = [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
     
     // You can add your app-specific url handling code here if needed
     
-    return wasHandled;
+    //return wasHandled;
+    return YES;
 }
 
 @end
