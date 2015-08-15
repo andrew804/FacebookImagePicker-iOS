@@ -12,15 +12,15 @@
 @class OLFacebookAlbum;
 
 @protocol OLPhotoViewControllerDelegate <NSObject>
-- (void)photoViewControllerDoneClicked:(OLPhotoViewController *)photoController;
+@optional
+- (void)photoViewController:(OLPhotoViewController *)photoController didSelectImage:(UIImage *)image;
 - (void)photoViewController:(OLPhotoViewController *)photoController didFailWithError:(NSError *)error;
+- (void)photoViewControllerDidCancelPickingImages:(OLPhotoViewController *)photoController;
 @end
 
 @interface OLPhotoViewController : UIViewController
+@property (nonatomic, weak) id<OLPhotoViewControllerDelegate> delegate;
 
 - (id)initWithAlbum:(OLFacebookAlbum *)album;
-
-@property (nonatomic, weak) id<OLPhotoViewControllerDelegate> delegate;
-@property (nonatomic, strong) NSArray/*<OLFacebookImage>*/ *selected;
-
+- (void)closeDown;
 @end

@@ -11,17 +11,21 @@
 #include <sys/time.h>
 
 @implementation UIImageView (FacebookFadeIn)
+
 - (void)setAndFadeInFacebookImageWithURL:(NSURL *)url {
+    
     [self setAndFadeInFacebookImageWithURL:url placeholder:nil];
 }
 
 - (void)setAndFadeInFacebookImageWithURL:(NSURL *)url placeholder:(UIImage *)placeholder {
+    
     struct timeval t;
     gettimeofday(&t, NULL);
     long msec = t.tv_sec * 1000 + t.tv_usec / 1000;
     
     self.alpha = 0;
     __weak UIImageView *weakImageView = self;
+    
     [self sd_setImageWithURL:url placeholderImage:placeholder completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
         struct timeval t;
         gettimeofday(&t, NULL);

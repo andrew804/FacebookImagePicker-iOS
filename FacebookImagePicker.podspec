@@ -16,4 +16,5 @@ Pod::Spec.new do |s|
   s.resources = ['FacebookImagePicker/FacebookImagePicker.xcassets', 'FacebookImagePicker/*.xib']
   s.dependency 'Facebook-iOS-SDK', '~> 4.0'
   s.dependency 'SDWebImage', '~> 3.7.2'
+  s.dependency 'RSKImageCropper'
 end

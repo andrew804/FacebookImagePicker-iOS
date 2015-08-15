@@ -14,10 +14,7 @@
 typedef void (^OLFacebookPhotosForAlbumRequestHandler)(NSArray/*<OLFacebookImage>*/ *photos, NSError *error, OLFacebookPhotosForAlbumRequest *nextPageRequest);
 
 @interface OLFacebookPhotosForAlbumRequest : NSObject
-
 - (id)initWithAlbum:(OLFacebookAlbum *)album;
-
-- (void)cancel;
 - (void)getPhotos:(OLFacebookPhotosForAlbumRequestHandler)handler;
-
+- (void)cancel;
 @end

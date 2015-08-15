@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		20FE21BB1B7E4C820074B34B /* OLFacebookPhotosOfUserRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 20FE21BA1B7E4C820074B34B /* OLFacebookPhotosOfUserRequest.m */; };
 		3D0D7AC91AC07B8400746FC8 /* UIImageView+FacebookFadeIn.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0D7AC81AC07B8400746FC8 /* UIImageView+FacebookFadeIn.m */; };
 		985B68DCADDD486BAD08BC6B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D8857B0F243D7BEA15A1E /* libPods.a */; };
 		CD73BEDE185E220E0009DE03 /* OLFacebookAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BEDD185E220E0009DE03 /* OLFacebookAlbum.m */; };
@@ -49,6 +50,8 @@
 
 /* Begin PBXFileReference section */
 		144025EE631714E88B7F3F86 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		20FE21B91B7E4C820074B34B /* OLFacebookPhotosOfUserRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFacebookPhotosOfUserRequest.h; sourceTree = "<group>"; };
+		20FE21BA1B7E4C820074B34B /* OLFacebookPhotosOfUserRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFacebookPhotosOfUserRequest.m; sourceTree = "<group>"; };
 		358D8857B0F243D7BEA15A1E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D0D7AC71AC07B8400746FC8 /* UIImageView+FacebookFadeIn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+FacebookFadeIn.h"; sourceTree = "<group>"; };
 		3D0D7AC81AC07B8400746FC8 /* UIImageView+FacebookFadeIn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+FacebookFadeIn.m"; sourceTree = "<group>"; };
@@ -156,6 +159,8 @@
 			children = (
 				CD73BEDC185E220E0009DE03 /* OLFacebookAlbum.h */,
 				CD73BEDD185E220E0009DE03 /* OLFacebookAlbum.m */,
+				20FE21B91B7E4C820074B34B /* OLFacebookPhotosOfUserRequest.h */,
+				20FE21BA1B7E4C820074B34B /* OLFacebookPhotosOfUserRequest.m */,
 				CD73BEE2185E22480009DE03 /* OLFacebookAlbumRequest.h */,
 				CD73BEE3185E22480009DE03 /* OLFacebookAlbumRequest.m */,
 				CD73BEEC185F0BC20009DE03 /* OLFacebookPhotosForAlbumRequest.h */,
@@ -447,6 +452,7 @@
 				CD73BF5C185F7B560009DE03 /* OLFacebookImagePickerCell.m in Sources */,
 				CD73BEDE185E220E0009DE03 /* OLFacebookAlbum.m in Sources */,
 				CD73BEEE185F0BC20009DE03 /* OLFacebookPhotosForAlbumRequest.m in Sources */,
+				20FE21BB1B7E4C820074B34B /* OLFacebookPhotosOfUserRequest.m in Sources */,
 				CD73BEF2185F22C00009DE03 /* OLFacebookImagePickerController.m in Sources */,
 				CD73BF54185F6C570009DE03 /* OLPhotoViewController.m in Sources */,
 				CD73BEE4185E22480009DE03 /* OLFacebookAlbumRequest.m in Sources */,

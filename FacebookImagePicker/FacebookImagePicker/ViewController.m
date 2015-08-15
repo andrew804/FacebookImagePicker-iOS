@@ -7,14 +7,12 @@
 //
 
 #import "ViewController.h"
-//#import <FacebookSDK.h>
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+//#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "OLFacebookAlbumRequest.h"
 #import "OLFacebookPhotosForAlbumRequest.h"
 #import "OLFacebookAlbum.h"
 #import "OLFacebookImage.h"
 #import "OLFacebookImagePickerController.h"
-//#import <FacebookSDK.h>
 
 @interface ViewController () <UINavigationControllerDelegate, OLFacebookImagePickerControllerDelegate>
 @property (nonatomic, strong) OLFacebookAlbumRequest *albumRequest;
@@ -37,6 +35,7 @@
 }
 
 - (IBAction)onButtonFacebookImagePickerClicked:(id)sender {
+    
     OLFacebookImagePickerController *picker = [[OLFacebookImagePickerController alloc] init];
     picker.selected = self.selected;
     picker.delegate = self;

@@ -35,6 +35,7 @@ static UIColor *selectedColor;
 static UIColor *disabledColor;
 
 + (void)initialize {
+    
     titleFont       = [UIFont systemFontOfSize:12];
     titleHeight     = 20.0f;
     titleColor      = [UIColor whiteColor];
@@ -44,6 +45,7 @@ static UIColor *disabledColor;
 }
 
 - (id)initWithFrame:(CGRect)frame {
+    
     if (self = [super initWithFrame:frame]) {
         self.opaque = YES;
         self.backgroundColor = [UIColor colorWithRed:247 / 255.0 green:247 / 255.0 blue:247 / 255.0 alpha:1.0];
@@ -69,14 +71,16 @@ static UIColor *disabledColor;
 }
 
 - (void)bind:(OLFacebookImage *)media {
+    
     self.facebookImage = media;
     [self.imageView setAndFadeInFacebookImageWithURL:[media bestURLForSize:CGSizeMake(220, 220)]]; // opted for slightly larger than thumb url. Might be better for performance just to go with thumb.
 }
 
 - (void)setSelected:(BOOL)selected {
+    
     [super setSelected:selected];
-    self.selectedDisabledOverlayView.hidden = !selected;
-    self.checkImageView.hidden = !selected;
+    //self.selectedDisabledOverlayView.hidden = !selected;          // I commented these 2 lines so check mark wouldn't be displayed on selected cell
+    //self.checkImageView.hidden = !selected;
 }
 
 @end

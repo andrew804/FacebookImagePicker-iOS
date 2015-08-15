@@ -18,7 +18,11 @@ static NSString *const kKeyImageWidth = @"co.oceanlabs.FacebookImagePicker.kKeyI
 static NSString *const kKeyImageHeight = @"co.oceanlabs.FacebookImagePicker.kKeyImageHeight";
 
 @implementation OLFacebookImageURL
+
+#pragma mark - Init
+//----------------------------------------------------
 - (id)initWithURL:(NSURL *)url size:(CGSize)size {
+    
     if (self = [super init]) {
         _url = url;
         _imageSize = size;
@@ -27,6 +31,7 @@ static NSString *const kKeyImageHeight = @"co.oceanlabs.FacebookImagePicker.kKey
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
+    
     if (self = [super init]) {
         _url = [aDecoder decodeObjectForKey:kKeyURL];
         CGFloat w = [aDecoder decodeDoubleForKey:kKeyImageWidth];
@@ -36,25 +41,38 @@ static NSString *const kKeyImageHeight = @"co.oceanlabs.FacebookImagePicker.kKey
     
     return self;
 }
+//-------------------------------------------
 
+
+#pragma mark - NSCoding
+//---------------------------------------------
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:_url forKey:kKeyURL];
     [aCoder encodeDouble:_imageSize.width forKey:kKeyImageWidth];
     [aCoder encodeDouble:_imageSize.height forKey:kKeyImageHeight];
 }
+//---------------------------------------------
 
+
+#pragma mark - NSCopying
+//-------------------------------------
 - (id)copyWithZone:(NSZone *)zone {
+    
     return [[OLFacebookImageURL allocWithZone:zone] initWithURL:_url size:_imageSize];
 }
+//-------------------------------------
+
 
 @end
 
-@interface OLFacebookImage ()
-
-@end
 
 @implementation OLFacebookImage
-- (id)initWithThumbURL:(NSURL *)thumbURL fullURL:(NSURL *)fullURL albumId:(NSString *)albumId sourceImages:(NSArray/*<OLFacebookImageURL>*/ *)sourceImages {
+
+#pragma mark - Init
+//-------------------------------------------------------------------------------------------
+- (id)initWithThumbURL:(NSURL *)thumbURL fullURL:(NSURL *)fullURL albumId:(NSString *)albumId
+          sourceImages:(NSArray/*<OLFacebookImageURL>*/ *)sourceImages {
+    
     if (self = [super init]) {
         _thumbURL = thumbURL;
         _fullURL = fullURL;
@@ -64,8 +82,11 @@ static NSString *const kKeyImageHeight = @"co.oceanlabs.FacebookImagePicker.kKey
     
     return self;
 }
+//--------------------------------------------------------------------------
+
 
 - (NSURL *)bestURLForSize:(CGSize)size {
+    
     if (self.sourceImages.count == 0) {
         return self.thumbURL;
     }
@@ -83,6 +104,7 @@ static NSString *const kKeyImageHeight = @"co.oceanlabs.FacebookImagePicker.kKey
 }
 
 - (BOOL)isEqual:(id)object {
+    
     if (![object isMemberOfClass:[OLFacebookImage class]]) {
         return NO;
     }
@@ -91,12 +113,15 @@ static NSString *const kKeyImageHeight = @"co.oceanlabs.FacebookImagePicker.kKey
 }
 
 - (NSUInteger)hash {
+    
     return 37 * (37 * self.thumbURL.hash + self.fullURL.hash) + self.albumId.hash;
 }
 
-#pragma mark - NSCoding protocol methods
 
+#pragma mark - NSCoding
+//---------------------------------------------
 - (void)encodeWithCoder:(NSCoder *)aCoder {
+    
     [aCoder encodeObject:self.thumbURL forKey:kKeyThumbURL];
     [aCoder encodeObject:self.fullURL forKey:kKeyFullURL];
     [aCoder encodeObject:self.albumId forKey:kKeyAlbumId];
@@ -104,6 +129,7 @@ static NSString *const kKeyImageHeight = @"co.oceanlabs.FacebookImagePicker.kKey
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
+    
     if (self = [super init]) {
         _thumbURL = [aDecoder decodeObjectForKey:kKeyThumbURL];
         _fullURL = [aDecoder decodeObjectForKey:kKeyFullURL];
@@ -113,12 +139,17 @@ static NSString *const kKeyImageHeight = @"co.oceanlabs.FacebookImagePicker.kKey
     
     return self;
 }
+//-------------------------------------------
 
-#pragma mark - NSCopying protocol methods
 
+#pragma mark - NSCopying
+//-------------------------------------
 - (id)copyWithZone:(NSZone *)zone {
+    
     OLFacebookImage *copy = [[OLFacebookImage allocWithZone:zone] initWithThumbURL:self.thumbURL fullURL:self.fullURL albumId:self.albumId sourceImages:self.sourceImages];
     return copy;
 }
+//-------------------------------------
+
 
 @end

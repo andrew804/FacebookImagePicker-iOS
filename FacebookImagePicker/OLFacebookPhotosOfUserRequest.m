@@ -1,24 +1,33 @@
 //
-//  OLFacebookAlbumRequest.m
+//  OLFacebookPhotosOfUserRequest.m
 //  FacebookImagePicker
 //
-//  Created by Deon Botha on 15/12/2013.
-//  Copyright (c) 2013 Deon Botha. All rights reserved.
+//  Created by Andrew Morris on 14/08/2015.
+//  Copyright (c) 2015 Deon Botha. All rights reserved.
 //
 
-#import "OLFacebookAlbumRequest.h"
-#import "OLFacebookImagePickerConstants.h"
-#import "OLFacebookAlbum.h"
+#import "OLFacebookPhotosOfUserRequest.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import "OLFacebookImage.h"
+#import "OLFacebookImagePickerConstants.h"
 
-@interface OLFacebookAlbumRequest ()
+@interface OLFacebookPhotosOfUserRequest ()
 @property (nonatomic, assign) BOOL cancelled;
 @property (nonatomic, strong) NSString *after;
 @end
 
-@implementation OLFacebookAlbumRequest
+@implementation OLFacebookPhotosOfUserRequest
 
-- (void)getAlbums:(OLFacebookAlbumRequestHandler)handler {
+- (id)initAfter:(NSString *)after {
+    
+    if (self = [super init]) {
+        self.after = after;
+    }
+    
+    return self;
+}
+
+- (void)getPhotos:(OLFacebookPhotosOfUserRequestHandler)handler {
     
     __block BOOL runOnce = NO;
     
@@ -31,14 +40,14 @@
         runOnce = YES;
         
         
-        NSString *graphPath = @"me/albums?limit=500&fields=id,name,count,cover_photo";
+        NSString *graphPath = @"me/photos?limit=500";
         if (self.after) {
             graphPath = [graphPath stringByAppendingFormat:@"&after=%@", self.after];
         }
         [[[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
                                            parameters:nil]
-                           startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-                               
+         startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+             
              if (!error) {
                  [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
                  if (self.cancelled) {
@@ -47,62 +56,70 @@
                  
                  NSString *parsingErrorMessage = @"Failed to parse Facebook Response. Please check your internet connectivity and try again.";
                  NSError *parsingError = [NSError errorWithDomain:kOLErrorDomainFacebookImagePicker code:kOLErrorCodeFacebookImagePickerBadResponse userInfo:@{NSLocalizedDescriptionKey: parsingErrorMessage}];
+                 
                  id data = [result objectForKey:@"data"];
                  if (![data isKindOfClass:[NSArray class]]) {
                      handler(nil, parsingError, nil);
                      return;
                  }
                  
-                 NSMutableArray *albums = [[NSMutableArray alloc] init];
-                 for (id album in data) {
-                     if (![album isKindOfClass:[NSDictionary class]]) {
+                 NSMutableArray *photosOfUser = [[NSMutableArray alloc] init];
+                 for (id photo in data) {
+                     id thumbURLString = [photo objectForKey:@"picture"];
+                     id fullURLString  = [photo objectForKey:@"source"];
+                     
+                     if (!([thumbURLString isKindOfClass:[NSString class]] && [fullURLString isKindOfClass:[NSString class]])) {
                          continue;
                      }
                      
-                     id albumId     = [album objectForKey:@"id"];
-                     id photoCount  = [album objectForKey:@"count"];
-                     id coverPhoto  = [album objectForKey:@"cover_photo"];
-                     id name        = [album objectForKey:@"name"];
-                     
-                     if (!([albumId isKindOfClass:[NSString class]] && [photoCount isKindOfClass:[NSNumber class]]
-                           && [coverPhoto isKindOfClass:[NSString class]] && [name isKindOfClass:[NSString class]])) {
-                         continue;
+                     NSMutableArray *sourceImages = [[NSMutableArray alloc] init];
+                     if ([photo[@"images"] isKindOfClass:[NSArray class]]) {
+                         for (id image in photo[@"images"]) {
+                             id source = image[@"source"];
+                             id width = image[@"width"];
+                             id height = image[@"height"];
+                             if ([source isKindOfClass:[NSString class]] &&
+                                 [width isKindOfClass:[NSNumber class]] &&
+                                 [height isKindOfClass:[NSNumber class]]) {
+                                 [sourceImages addObject:[[OLFacebookImageURL alloc] initWithURL:[NSURL URLWithString:source] size:CGSizeMake([width doubleValue], [height doubleValue])]];
+                             }
+                         }
                      }
                      
-                     OLFacebookAlbum *album = [[OLFacebookAlbum alloc] init];
-                     album.albumId = albumId;
-                     album.photoCount = [photoCount unsignedIntegerValue];
-                     album.name = name;
-                     album.coverPhotoURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=small&access_token=%@", album.albumId, [FBSDKAccessToken currentAccessToken].tokenString]];
-                     [albums addObject:album];
+                     OLFacebookImage *image = [[OLFacebookImage alloc] initWithThumbURL:[NSURL URLWithString:thumbURLString] fullURL:[NSURL URLWithString:fullURLString] albumId:nil sourceImages:sourceImages];
+                     [photosOfUser addObject:image];
                  }
                  
                  // get next page cursor
-                 OLFacebookAlbumRequest *nextPageRequest = nil;
+                 OLFacebookPhotosOfUserRequest *nextPageRequest = nil;
                  id paging = [result objectForKey:@"paging"];
                  if ([paging isKindOfClass:[NSDictionary class]]) {
                      id cursors = [paging objectForKey:@"cursors"];
-                     id next = [paging objectForKey:@"next"];          // next will be non nil if a next page exists
+                     id next = [paging objectForKey:@"next"]; // next will be non nil if a next page exists
                      if (next && [cursors isKindOfClass:[NSDictionary class]]) {
                          id after = [cursors objectForKey:@"after"];
                          if ([after isKindOfClass:[NSString class]]) {
-                             nextPageRequest = [[OLFacebookAlbumRequest alloc] init];
-                             nextPageRequest.after = after;
+                             nextPageRequest = [[OLFacebookPhotosOfUserRequest alloc] initAfter:after];
                          }
                      }
                  }
                  
-                 handler(albums, nil, nextPageRequest);
+                 handler(photosOfUser, nil, nextPageRequest);
              }
          }];
     }
 }
 
-+ (void)handleFacebookError:(NSError *)error completionHandler:(OLFacebookAlbumRequestHandler)handler {
+- (void)cancel {
+    
+    self.cancelled = YES;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+}
+
++ (void)handleFacebookError:(NSError *)error completionHandler:(OLFacebookPhotosOfUserRequestHandler)handler {
     
     /*
      NSString *message;
-     
      if ([FBErrorUtility shouldNotifyUserForError:error]) {
      message = [FBErrorUtility userMessageForError:error];
      } else if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryAuthenticationReopenSession) {
@@ -114,13 +131,8 @@
      }
      
      handler(nil, [NSError errorWithDomain:error.domain code:error.code userInfo:@{NSLocalizedDescriptionKey: message}], nil);
+     
      */
-}
-
-- (void)cancel {
-    
-    self.cancelled = YES;
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
 
 

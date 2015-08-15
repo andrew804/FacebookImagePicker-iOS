@@ -20,25 +20,6 @@
 
 @implementation OLFacebookPhotosForAlbumRequest
 
-+ (void)handleFacebookError:(NSError *)error completionHandler:(OLFacebookPhotosForAlbumRequestHandler)handler {
-    
-    /*
-    NSString *message;
-    if ([FBErrorUtility shouldNotifyUserForError:error]) {
-        message = [FBErrorUtility userMessageForError:error];
-    } else if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryAuthenticationReopenSession) {
-        message = @"Your current Facebook session is no longer valid. Please log in again.";
-    } else if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryUserCancelled) {
-        message = @"The app requires authorization to access your Facebook photos to continue. Please open Settings and provide access.";
-    } else {
-        message = @"Failed to access your Facebook photos. Please check your internet connectivity and try again.";
-    }
-    
-    handler(nil, [NSError errorWithDomain:error.domain code:error.code userInfo:@{NSLocalizedDescriptionKey: message}], nil);
-     
-     */
-}
-
 - (id)initWithAlbum:(OLFacebookAlbum *)album after:(NSString *)after {
     
     if (self = [super init]) {
@@ -54,12 +35,6 @@
     return [self initWithAlbum:album after:nil];
 }
 
-- (void)cancel {
-    
-    self.cancelled = YES;
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-}
-
 - (void)getPhotos:(OLFacebookPhotosForAlbumRequestHandler)handler {
     
     __block BOOL runOnce = NO;
@@ -72,7 +47,7 @@
         }
         runOnce = YES;
         
-        NSString *graphPath = [NSString stringWithFormat:@"%@/photos?fields=picture,source,images&limit=100", self.album.albumId];
+        NSString *graphPath = [NSString stringWithFormat:@"%@/photos?fields=picture,source,images&limit=500", self.album.albumId];
         if (self.after) {
             graphPath = [graphPath stringByAppendingFormat:@"&after=%@", self.after];
         }
@@ -141,5 +116,31 @@
          }];
     }
 }
+
+- (void)cancel {
+    
+    self.cancelled = YES;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+}
+
++ (void)handleFacebookError:(NSError *)error completionHandler:(OLFacebookPhotosForAlbumRequestHandler)handler {
+    
+    /*
+     NSString *message;
+     if ([FBErrorUtility shouldNotifyUserForError:error]) {
+     message = [FBErrorUtility userMessageForError:error];
+     } else if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryAuthenticationReopenSession) {
+     message = @"Your current Facebook session is no longer valid. Please log in again.";
+     } else if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryUserCancelled) {
+     message = @"The app requires authorization to access your Facebook photos to continue. Please open Settings and provide access.";
+     } else {
+     message = @"Failed to access your Facebook photos. Please check your internet connectivity and try again.";
+     }
+     
+     handler(nil, [NSError errorWithDomain:error.domain code:error.code userInfo:@{NSLocalizedDescriptionKey: message}], nil);
+     
+     */
+}
+
 
 @end

@@ -21,6 +21,7 @@ static const NSUInteger kAlbumPreviewImageSize = 78;
 @implementation OLAlbumCell
 
 - (void)setAlbum:(OLFacebookAlbum *)album {
+    
     static UIImage *placeholderImage = nil;
     if (!placeholderImage) {
         placeholderImage = [UIImage imageNamed:@"album_placeholder"];
@@ -34,6 +35,7 @@ static const NSUInteger kAlbumPreviewImageSize = 78;
 }
 
 - (void)layoutSubviews {
+    
     [super layoutSubviews];
     self.imageView.bounds = CGRectMake(0, 0, kAlbumPreviewImageSize, kAlbumPreviewImageSize);
     self.imageView.frame  = CGRectMake(15, (self.frame.size.height - kAlbumPreviewImageSize) / 2, kAlbumPreviewImageSize, kAlbumPreviewImageSize);
@@ -51,33 +53,76 @@ static const NSUInteger kAlbumPreviewImageSize = 78;
 @end
 
 @interface OLAlbumViewController () <UITableViewDelegate, UITableViewDataSource, OLPhotoViewControllerDelegate>
-@property (nonatomic, strong) OLFacebookAlbumRequest *albumRequestForNextPage;
-@property (nonatomic, strong) OLFacebookAlbumRequest *inProgressRequest;
-@property (nonatomic, strong) NSMutableArray *albums;
 @property (nonatomic, weak) IBOutlet UIActivityIndicatorView *loadingIndicator;
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
-@property (nonatomic, strong) UIView *loadingFooter;
-@property (nonatomic, strong) OLPhotoViewController *photoViewController;
-@property (nonatomic, strong) NSError *getAlbumError;
 
+@property (nonatomic, strong) UIView *loadingFooter;
+@property (nonatomic, strong) NSMutableArray *albums;
+@property (nonatomic, strong) NSError *getAlbumError;
+@property (nonatomic, strong) OLPhotoViewController *photoViewController;
+@property (nonatomic, strong) OLFacebookAlbumRequest *albumRequestForNextPage;
+@property (nonatomic, strong) OLFacebookAlbumRequest *inProgressRequest;
 @end
 
 @implementation OLAlbumViewController
 
-- (id)init {
-    if (self = [super init]) {
-        self.title = @"Photos";
-        self.albums = [[NSMutableArray alloc] init];
-    }
-    return self;
+#pragma mark - Life Cycle
+//-----------------------
+- (void)viewDidLoad {
+    
+    [super viewDidLoad];
+    [self setup];
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(onButtonDoneClicked)];
+- (void)viewDidAppear:(BOOL)animated {
+    
+    [super viewDidAppear:animated];
+    
+    if (self.getAlbumError) {
+        self.loadingIndicator.hidden = YES;
+        NSError *error = self.getAlbumError;
+        self.getAlbumError = nil;
+        [self.delegate albumViewController:self didFailWithError:error];
+    }
+}
+
+- (void)closeDown {
+    
+    [self.albumRequestForNextPage cancel];
+    [self.inProgressRequest cancel];
+    [self.photoViewController closeDown];
+}
+//---------------------
+
+
+#pragma mark - Setup
+//-----------------
+- (void)setup {
+    
+    self.title = @"My Albums";
+    self.tabBarItem.image = [UIImage imageNamed:@"album_light"];
+    self.tabBarItem.image = [self.tabBarItem.image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    [self.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor lightGrayColor]} forState:UIControlStateNormal];
+    [self.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]} forState:UIControlStateSelected];
+    
+    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    self.navigationController.navigationBar.barTintColor = [[UIColor alloc] initWithRed:0.22 green:0.45 blue:0.89 alpha:0.9];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
+                                                                             style:UIBarButtonItemStylePlain
+                                                                            target:self
+                                                                            action:@selector(cancel)];
+    
+    self.albums = [[NSMutableArray alloc] init];
     self.albumRequestForNextPage = [[OLFacebookAlbumRequest alloc] init];
+    
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self setupLoadingFooter];
     [self loadNextAlbumPage];
+}
+
+- (void)setupLoadingFooter {
     
     UIView *loadingFooter = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -86,19 +131,23 @@ static const NSUInteger kAlbumPreviewImageSize = 78;
     [loadingFooter addSubview:activityIndicator];
     self.loadingFooter = loadingFooter;
 }
+//------------------------------
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    if (self.getAlbumError) {
-        self.loadingIndicator.hidden = YES;
-        NSError *error = self.getAlbumError;
-        self.getAlbumError = nil;
-        [self.delegate albumViewController:self didFailWithError:error];
-        
-    }
+
+#pragma mark - Buttons
+//------------------
+- (void)cancel {
+    
+    [self closeDown];
+    [self.delegate albumViewControllerDidCancelPickingImages:self];
 }
+//------------------
 
+
+#pragma mark - Load Next Album Page
+//-----------------------------
 - (void)loadNextAlbumPage {
+    
     self.inProgressRequest = self.albumRequestForNextPage;
     self.albumRequestForNextPage = nil;
     [self.inProgressRequest getAlbums:^(NSArray/*<OLFacebookAlbum>*/ *albums, NSError *error, OLFacebookAlbumRequest *nextPageRequest) {
@@ -137,35 +186,23 @@ static const NSUInteger kAlbumPreviewImageSize = 78;
         
     }];
 }
+//-----------------------------
 
-- (void)updateSelectedFromPhotoViewController {
-    if (self.photoViewController) {
-        // we're coming back from a photo view so update the selected to reflect any changes the user made
-        self.selected = self.photoViewController.selected;
-        self.photoViewController = nil;
-    }
-}
 
-- (void)onButtonDoneClicked {
-    [self.delegate albumViewControllerDoneClicked:self];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self updateSelectedFromPhotoViewController];
-}
-
-#pragma mark - UITableViewDataSource methods
-
+#pragma mark - UITableView DataSource
+//---------------------------------------------------------------------
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
     return self.albums.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     static NSString *CellIdentifier = @"AlbumCell";
     OLAlbumCell *cell = (OLAlbumCell *) [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
@@ -176,40 +213,47 @@ static const NSUInteger kAlbumPreviewImageSize = 78;
     
     return cell;
 }
+//----------------------------------------------------------------------------------------------------------
 
-#pragma mark - UITableViewDelegate methods
 
+#pragma mark - UITableView Delegate
+//-------------------------------------------------------------------------------------------------
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     return kAlbumPreviewImageSize + 12;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     OLFacebookAlbum *album = [self.albums objectAtIndex:indexPath.row];
     self.photoViewController = [[OLPhotoViewController alloc] initWithAlbum:album];
-    self.photoViewController.selected = self.selected;
     self.photoViewController.delegate = self;
     [self.navigationController pushViewController:self.photoViewController animated:YES];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    // this is actually the UICollectionView scrollView
+    
     if (self.inProgressRequest == nil && scrollView.contentOffset.y >= self.tableView.contentSize.height - (self.tableView.frame.size.height + self.loadingFooter.frame.size.height)) {
         // we've reached the bottom, lets load the next page of albums.
         [self loadNextAlbumPage];
     }
 }
+//----------------------------------------------------------
 
-#pragma mark - OLPhotoViewControllerDelegate methods
 
-- (void)photoViewControllerDoneClicked:(OLPhotoViewController *)photoController {
-    NSAssert(self.photoViewController != nil, @"oops");
-    [self updateSelectedFromPhotoViewController];
-    [self.delegate albumViewControllerDoneClicked:self];
+#pragma mark - OLPhotoViewController Delegate
+//--------------------------------------------------------------------------------------------------------
+- (void)photoViewController:(OLPhotoViewController *)photoController didSelectImage:(UIImage *)image {
+    
+    [self.delegate albumViewController:self didSelectImage:image];
 }
 
 - (void)photoViewController:(OLPhotoViewController *)photoController didFailWithError:(NSError *)error {
+    
     [self.delegate albumViewController:self didFailWithError:error];
 }
+//----------------------------------------------------------------------------------------------------------
+
 
 @end

@@ -13,6 +13,6 @@
 typedef void (^OLFacebookAlbumRequestHandler)(NSArray/*<OLFacebookAlbum>*/ *albums, NSError *error,OLFacebookAlbumRequest *nextPageRequest);
 
 @interface OLFacebookAlbumRequest : NSObject
-- (void)cancel;
 - (void)getAlbums:(OLFacebookAlbumRequestHandler)handler;
+- (void)cancel;
 @end

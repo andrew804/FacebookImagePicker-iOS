@@ -21,17 +21,29 @@ PODS:
   - Facebook-iOS-SDK/ShareKit (4.1.0):
     - Bolts (~> 1.1)
     - Facebook-iOS-SDK/CoreKit
+  - RSKImageCropper (1.2.1)
   - SDWebImage (3.7.3):
     - SDWebImage/Core (= 3.7.3)
   - SDWebImage/Core (3.7.3)
 
 DEPENDENCIES:
   - Facebook-iOS-SDK (~> 4.0)
+  - RSKImageCropper (from `https://github.com/andrew804/RSKImageCropper.git`)
   - SDWebImage (~> 3.7.2)
+
+EXTERNAL SOURCES:
+  RSKImageCropper:
+    :git: https://github.com/andrew804/RSKImageCropper.git
+
+CHECKOUT OPTIONS:
+  RSKImageCropper:
+    :commit: aa745a47d4ddc4a59cd98ef3a404d5ad7e5987bd
+    :git: https://github.com/andrew804/RSKImageCropper.git
 
 SPEC CHECKSUMS:
   Bolts: d176cb1e0012175589e389a9db49b85e27787576
   Facebook-iOS-SDK: f42dfb27283bf5f05e3a9edc88459a75b9892d99
+  RSKImageCropper: e3e1d923953fe3b84d61daaeef9a0b022322fd4b
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
 
 COCOAPODS: 0.38.2
