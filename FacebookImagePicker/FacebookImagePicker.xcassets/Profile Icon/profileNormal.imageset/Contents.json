@@ -7,7 +7,7 @@
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "album_light.png"
+      "filename" : "profileNormal.png"
     },
     {
       "idiom" : "universal",
@@ -16,6 +16,7 @@
   ],
   "info" : {
     "version" : 1,
-    "author" : "xcode"
+    "author" : "xcode",
+    "template-rendering-intent" : "original"
   }
 }

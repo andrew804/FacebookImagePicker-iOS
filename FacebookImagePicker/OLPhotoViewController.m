@@ -107,8 +107,12 @@ static NSString *const kSupplementaryViewFooterReuseIdentifier = @"co.oceanlabs.
 - (void)setupRootViewElements {
     
     self.title = @"Photos of Me";
-    self.tabBarItem.image = [UIImage imageNamed:@"profile_dark"];
-    [self.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor lightGrayColor]} forState:UIControlStateNormal];
+    
+    self.tabBarItem.image = [[UIImage imageNamed:@"profileNormal"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    self.tabBarItem.selectedImage = [[UIImage imageNamed:@"profileSelected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    UIColor *tabBarItemUnselectedColor = [UIColor colorWithRed:0.75 green:0.75 blue:0.75 alpha:1.0];
+    [self.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName : tabBarItemUnselectedColor} forState:UIControlStateNormal];
     [self.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]} forState:UIControlStateSelected];
     
     [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];

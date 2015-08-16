@@ -99,12 +99,30 @@ static const NSUInteger kAlbumPreviewImageSize = 78;
 //-----------------
 - (void)setup {
     
-    self.title = @"My Albums";
-    self.tabBarItem.image = [UIImage imageNamed:@"album_light"];
-    self.tabBarItem.image = [self.tabBarItem.image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
-    [self.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor lightGrayColor]} forState:UIControlStateNormal];
+    self.albums = [[NSMutableArray alloc] init];
+    self.albumRequestForNextPage = [[OLFacebookAlbumRequest alloc] init];
+    
+    [self setupTabBarItem];
+    [self setupNavigationController];
+    [self setupLoadingFooter];
+    [self loadNextAlbumPage];
+}
+
+- (void)setupTabBarItem {
+    
+    self.title = @"My Albums";
+    
+    self.tabBarItem.image = [[UIImage imageNamed:@"albumNormal"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    self.tabBarItem.selectedImage = [[UIImage imageNamed:@"albumSelected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    UIColor *tabBarItemUnselectedColor = [UIColor colorWithRed:0.75 green:0.75 blue:0.75 alpha:1.0];
+    [self.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName : tabBarItemUnselectedColor} forState:UIControlStateNormal];
     [self.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]} forState:UIControlStateSelected];
+}
+
+- (void)setupNavigationController {
     
     [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
@@ -113,13 +131,6 @@ static const NSUInteger kAlbumPreviewImageSize = 78;
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:self
                                                                             action:@selector(cancel)];
-    
-    self.albums = [[NSMutableArray alloc] init];
-    self.albumRequestForNextPage = [[OLFacebookAlbumRequest alloc] init];
-    
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [self setupLoadingFooter];
-    [self loadNextAlbumPage];
 }
 
 - (void)setupLoadingFooter {
