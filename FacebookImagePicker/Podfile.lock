@@ -37,7 +37,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   RSKImageCropper:
-    :commit: aa745a47d4ddc4a59cd98ef3a404d5ad7e5987bd
+    :commit: 4378be431db790360b6faa210be52349084f9bfa
     :git: https://github.com/andrew804/RSKImageCropper.git
 
 SPEC CHECKSUMS:
