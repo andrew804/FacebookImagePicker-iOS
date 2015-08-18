@@ -94,7 +94,7 @@
 
 - (void)photoViewControllerDidCancelPickingImages:(OLPhotoViewController *)photoController {
     
-    [self dismissViewControllerAnimated:self completion:nil];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 //----------------------------------------------------------------------------------------------
 
@@ -113,7 +113,7 @@
 
 - (void)albumViewControllerDidCancelPickingImages:(OLAlbumViewController *)albumController {
     
-    [self dismissViewControllerAnimated:self completion:nil];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 //----------------------------------------------------------------------------------------------
 
