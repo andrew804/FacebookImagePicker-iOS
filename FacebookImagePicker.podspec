@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   }
   s.source_files = ['FacebookImagePicker/OL*.{h,m}', 'FacebookImagePicker/UIImageView+FacebookFadeIn.{h,m}']
   s.resources = ['FacebookImagePicker/FacebookImagePicker.xcassets', 'FacebookImagePicker/*.xib']
-  s.dependency 'Facebook-iOS-SDK', '~> 4.0'
+  s.dependency 'FBSDKCoreKit', '~> 4.6'
   s.dependency 'SDWebImage', '~> 3.7.2'
   s.dependency 'RSKImageCropper'
 end

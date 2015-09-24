@@ -1,4 +1,4 @@
-pod 'Facebook-iOS-SDK', '~> 4.0'
+pod 'FBSDKCoreKit', '~> 4.6'
 pod 'SDWebImage', '~> 3.7.2'
 
 pod 'RSKImageCropper', :git => 'https://github.com/andrew804/RSKImageCropper.git'
