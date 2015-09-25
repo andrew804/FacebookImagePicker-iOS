@@ -30,13 +30,12 @@
         }
         runOnce = YES;
         
-        
-        NSString *graphPath = @"me/albums?limit=500&fields=id,name,count,cover_photo";
+        NSString *graphPath = @"me/albums?limit=500";
         if (self.after) {
             graphPath = [graphPath stringByAppendingFormat:@"&after=%@", self.after];
         }
         [[[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
-                                           parameters:nil]
+                                           parameters:@{@"fields": @"id, name, count, cover_photo"}]
                            startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
                                
              if (!error) {
@@ -65,7 +64,7 @@
                      id name        = [album objectForKey:@"name"];
                      
                      if (!([albumId isKindOfClass:[NSString class]] && [photoCount isKindOfClass:[NSNumber class]]
-                           && [coverPhoto isKindOfClass:[NSString class]] && [name isKindOfClass:[NSString class]])) {
+                           && [coverPhoto isKindOfClass:[NSDictionary class]] && [name isKindOfClass:[NSString class]])) {
                          continue;
                      }
                      

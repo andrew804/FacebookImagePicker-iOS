@@ -47,13 +47,13 @@
         }
         runOnce = YES;
         
-        NSString *graphPath = [NSString stringWithFormat:@"%@/photos?fields=picture,source,images&limit=500", self.album.albumId];
+        NSString *graphPath = [NSString stringWithFormat:@"%@/photos?limit=500", self.album.albumId];
         if (self.after) {
             graphPath = [graphPath stringByAppendingFormat:@"&after=%@", self.after];
         }
         [[[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
-                                           parameters:nil]
-         startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+                                           parameters:@{@"fields": @"picture, source, images"}]
+                           startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
              
              if (!error) {
                  [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
@@ -63,7 +63,6 @@
                  
                  NSString *parsingErrorMessage = @"Failed to parse Facebook Response. Please check your internet connectivity and try again.";
                  NSError *parsingError = [NSError errorWithDomain:kOLErrorDomainFacebookImagePicker code:kOLErrorCodeFacebookImagePickerBadResponse userInfo:@{NSLocalizedDescriptionKey: parsingErrorMessage}];
-                 
                  id data = [result objectForKey:@"data"];
                  if (![data isKindOfClass:[NSArray class]]) {
                      handler(nil, parsingError, nil);
