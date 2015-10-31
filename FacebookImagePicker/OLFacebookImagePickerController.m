@@ -11,12 +11,15 @@
 #import "OLAlbumViewController.h"
 #import "OLPhotoViewController.h"
 #import "RSKImageCropViewController.h"
-
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKLoginKit/FBSDKLoginKit.h>
+
+typedef void (^ Completed)();
 
 @interface OLFacebookImagePickerController () <OLPhotoViewControllerDelegate, OLAlbumViewControllerDelegate, RSKImageCropViewControllerDelegate>
-@property (nonatomic, strong) OLPhotoViewController *photoVC;
-@property (nonatomic, strong) OLAlbumViewController *albumVC;
+@property (strong, nonatomic) OLPhotoViewController *photoVC;
+@property (strong, nonatomic) OLAlbumViewController *albumVC;
+@property (nonatomic, copy) Completed completedFBPermissionCheck;
 @end
 
 @implementation OLFacebookImagePickerController
@@ -25,6 +28,7 @@
 //-----------------------
 - (void)viewDidLoad {
     
+    [super viewDidLoad];
     [self setup];
 }
 
@@ -32,6 +36,10 @@
     
     [super viewDidAppear:animated];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    
+    [self checkFacebookPhotosPermission:^{
+        [self setup];
+    }];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -78,6 +86,58 @@
     return navController;
 }
 //--------------------------------------------------
+
+
+#pragma mark - Facebook Permission
+//--------------------------------------------------------------
+- (void)checkFacebookPhotosPermission:(Completed)completed {
+    
+    BOOL havePhotosPermission = [[FBSDKAccessToken currentAccessToken] hasGranted:@"user_photos"];
+    
+    if (!havePhotosPermission) {
+        self.completedFBPermissionCheck = completed;
+        [self requestPhotosPermission];
+        
+    } else {
+        completed();
+    }
+}
+
+- (void)requestPhotosPermission {
+    
+    FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
+    
+    [loginManager logInWithReadPermissions:@[@"user_photos"]
+                        fromViewController:nil
+                                   handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+                                       [self handlePermissionReqestResult:result error:error];
+                                   }];
+}
+
+- (void)handlePermissionReqestResult:(FBSDKLoginManagerLoginResult *)result error:(NSError *)error {
+    
+    if (error) {
+        [self.delegate facebookImagePickerDidCancelPickingImages:self];
+        [self showFBPermissionErrorAlert];
+        
+    } else if (result.isCancelled) {
+        [self.delegate facebookImagePickerDidCancelPickingImages:self];
+        
+    } else {
+        self.completedFBPermissionCheck();
+    }
+}
+
+- (void)showFBPermissionErrorAlert {
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Oops"
+                                                    message:@"There was a problem getting your photos permission from Facebook, please try again."
+                                                   delegate:self
+                                          cancelButtonTitle:nil
+                                          otherButtonTitles:@"OK", nil];
+    [alert show];
+}
+//--------------------------------------
 
 
 #pragma mark - OLPhotoViewController Delegate
