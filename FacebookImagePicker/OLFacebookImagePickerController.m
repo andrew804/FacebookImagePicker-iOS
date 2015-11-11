@@ -38,7 +38,7 @@ typedef void (^ Completed)();
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     
     [self checkFacebookPhotosPermission:^{
-        [self setup];
+        [self resetTabBarControllers];
     }];
 }
 
@@ -85,7 +85,12 @@ typedef void (^ Completed)();
     
     return navController;
 }
-//--------------------------------------------------
+
+- (void)resetTabBarControllers {
+    
+    self.tabBarController.viewControllers = [NSArray arrayWithObjects:[self photoNavController], [self albumNavController], nil];
+}
+//----------------------------------
 
 
 #pragma mark - Facebook Permission
@@ -97,9 +102,6 @@ typedef void (^ Completed)();
     if (!havePhotosPermission) {
         self.completedFBPermissionCheck = completed;
         [self requestPhotosPermission];
-        
-    } else {
-        completed();
     }
 }
 
