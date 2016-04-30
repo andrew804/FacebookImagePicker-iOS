@@ -24,9 +24,6 @@
  https://developers.facebook.com/docs/ios/getting-started
  */
 @interface OLFacebookImagePickerController : UIViewController
-/**
- The image picker’s delegate object.
- */
 @property (nonatomic, weak) id <OLFacebookImagePickerControllerDelegate> delegate;
 @property (strong, nonatomic) UITabBarController *tabBarController;
 @end
