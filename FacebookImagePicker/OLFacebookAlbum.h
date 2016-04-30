@@ -10,6 +10,7 @@
 
 @interface OLFacebookAlbum : NSObject
 @property (nonatomic, copy) NSString *name;
+@property (nonatomic, copy) NSString *type;
 @property (nonatomic, strong) NSURL *coverPhotoURL;
 @property (nonatomic, copy) NSString *albumId;
 @property (nonatomic, assign) NSUInteger photoCount;

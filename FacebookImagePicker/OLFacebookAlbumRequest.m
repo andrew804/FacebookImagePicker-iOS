@@ -35,7 +35,7 @@
             graphPath = [graphPath stringByAppendingFormat:@"&after=%@", self.after];
         }
         [[[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
-                                           parameters:@{@"fields": @"id, name, count, cover_photo"}]
+                                           parameters:@{@"fields": @"id, name, type, count, cover_photo"}]
                            startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
                                
              if (!error) {
@@ -62,9 +62,11 @@
                      id photoCount  = [album objectForKey:@"count"];
                      id coverPhoto  = [album objectForKey:@"cover_photo"];
                      id name        = [album objectForKey:@"name"];
+                     id type        = [album objectForKey:@"type"];
                      
                      if (!([albumId isKindOfClass:[NSString class]] && [photoCount isKindOfClass:[NSNumber class]]
-                           && [coverPhoto isKindOfClass:[NSDictionary class]] && [name isKindOfClass:[NSString class]])) {
+                           && [coverPhoto isKindOfClass:[NSDictionary class]] && [name isKindOfClass:[NSString class]]
+                           && [type isKindOfClass:[NSString class]])) {
                          continue;
                      }
                      
@@ -72,6 +74,7 @@
                      album.albumId = albumId;
                      album.photoCount = [photoCount unsignedIntegerValue];
                      album.name = name;
+                     album.type = type;
                      album.coverPhotoURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=small&access_token=%@", album.albumId, [FBSDKAccessToken currentAccessToken].tokenString]];
                      [albums addObject:album];
                  }
