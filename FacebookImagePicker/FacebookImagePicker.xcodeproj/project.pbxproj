@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		20FC87161CCE322A00B96EF7 /* OLFacebookProfileImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20FC87151CCE322A00B96EF7 /* OLFacebookProfileImagePickerController.m */; };
 		20FE21BB1B7E4C820074B34B /* OLFacebookPhotosOfUserRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 20FE21BA1B7E4C820074B34B /* OLFacebookPhotosOfUserRequest.m */; };
 		3D0D7AC91AC07B8400746FC8 /* UIImageView+FacebookFadeIn.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0D7AC81AC07B8400746FC8 /* UIImageView+FacebookFadeIn.m */; };
 		985B68DCADDD486BAD08BC6B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D8857B0F243D7BEA15A1E /* libPods.a */; };
@@ -50,6 +51,8 @@
 
 /* Begin PBXFileReference section */
 		144025EE631714E88B7F3F86 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		20FC87141CCE322A00B96EF7 /* OLFacebookProfileImagePickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFacebookProfileImagePickerController.h; sourceTree = "<group>"; };
+		20FC87151CCE322A00B96EF7 /* OLFacebookProfileImagePickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFacebookProfileImagePickerController.m; sourceTree = "<group>"; };
 		20FE21B91B7E4C820074B34B /* OLFacebookPhotosOfUserRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFacebookPhotosOfUserRequest.h; sourceTree = "<group>"; };
 		20FE21BA1B7E4C820074B34B /* OLFacebookPhotosOfUserRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFacebookPhotosOfUserRequest.m; sourceTree = "<group>"; };
 		358D8857B0F243D7BEA15A1E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -127,9 +130,9 @@
 			isa = PBXGroup;
 			children = (
 				CD73BF48185F5EAE0009DE03 /* Resources */,
+				CD73BEDB185E21F90009DE03 /* Model */,
 				CD73BF57185F7A5C0009DE03 /* View */,
 				CD73BEEB185F0B3D0009DE03 /* Controller */,
-				CD73BEDB185E21F90009DE03 /* Model */,
 			);
 			name = FacebookImagePicker;
 			sourceTree = "<group>";
@@ -150,6 +153,8 @@
 				CD73BEF3185F26900009DE03 /* Private */,
 				CD73BEF0185F22C00009DE03 /* OLFacebookImagePickerController.h */,
 				CD73BEF1185F22C00009DE03 /* OLFacebookImagePickerController.m */,
+				20FC87141CCE322A00B96EF7 /* OLFacebookProfileImagePickerController.h */,
+				20FC87151CCE322A00B96EF7 /* OLFacebookProfileImagePickerController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -159,12 +164,12 @@
 			children = (
 				CD73BEDC185E220E0009DE03 /* OLFacebookAlbum.h */,
 				CD73BEDD185E220E0009DE03 /* OLFacebookAlbum.m */,
-				20FE21B91B7E4C820074B34B /* OLFacebookPhotosOfUserRequest.h */,
-				20FE21BA1B7E4C820074B34B /* OLFacebookPhotosOfUserRequest.m */,
 				CD73BEE2185E22480009DE03 /* OLFacebookAlbumRequest.h */,
 				CD73BEE3185E22480009DE03 /* OLFacebookAlbumRequest.m */,
 				CD73BEEC185F0BC20009DE03 /* OLFacebookPhotosForAlbumRequest.h */,
 				CD73BEED185F0BC20009DE03 /* OLFacebookPhotosForAlbumRequest.m */,
+				20FE21B91B7E4C820074B34B /* OLFacebookPhotosOfUserRequest.h */,
+				20FE21BA1B7E4C820074B34B /* OLFacebookPhotosOfUserRequest.m */,
 				CD73BEE7185EFFFB0009DE03 /* OLFacebookImagePickerConstants.h */,
 				CD73BEE8185EFFFB0009DE03 /* OLFacebookImagePickerConstants.m */,
 			);
@@ -466,6 +471,7 @@
 				3D0D7AC91AC07B8400746FC8 /* UIImageView+FacebookFadeIn.m in Sources */,
 				CD73BEE1185E221B0009DE03 /* OLFacebookImage.m in Sources */,
 				CD73BF5C185F7B560009DE03 /* OLFacebookImagePickerCell.m in Sources */,
+				20FC87161CCE322A00B96EF7 /* OLFacebookProfileImagePickerController.m in Sources */,
 				CD73BEDE185E220E0009DE03 /* OLFacebookAlbum.m in Sources */,
 				CD73BEEE185F0BC20009DE03 /* OLFacebookPhotosForAlbumRequest.m in Sources */,
 				20FE21BB1B7E4C820074B34B /* OLFacebookPhotosOfUserRequest.m in Sources */,
